@@ -1,0 +1,33 @@
+//Example script to detect incoming espionage mission and hide your fleet from it with deploy
+
+//*****************Parameters***************************
+checkEvery = 5 //seconds
+hideFrom = NewCoordinate(1, 1, 1, MOON_TYPE)
+hideTo = NewCoordinate(1, 1, 1, PLANET_TYPE)
+recallAfter = 20 //seconds
+//******************************************************
+
+for{
+    if IsUnderAttack(){
+        attacks = GetAttacks()
+        for attack in attacks{
+            if attack.Destination == hideFrom && attack.MissionType == SPY{
+                f = NewFleet()
+                f.SetOrigin(hideFrom)
+                f.SetDestination(hideTo)
+                f.SetMission(PARK)
+                f.SetSpeed(TEN_PERCENT)
+                f.SetAllResources()
+                f.SetAllShips()
+                f.SetRecallIn(20 * 1000)
+                
+                a, b = f.SendNow()
+                SendTelegram(TELEGRAM_CHAT_ID, "Spy on " + hideFrom + " detected, fleet evactuated")
+                Sleep(recallAfter * 1000)
+                CancelFleet(a.ID)
+                SendTelegram(TELEGRAM_CHAT_ID, "fleet recalled")
+            }
+        }
+    }
+    Sleep(checkEvery * 1000)
+}
