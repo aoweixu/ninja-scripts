@@ -14,7 +14,7 @@ func fleetSaveAll(){
     fs1.SetAllResources()
     fs1s, err = fs1.SendNow()
     print(err)
-
+    }
 }
 
 func planet2Moon(){
