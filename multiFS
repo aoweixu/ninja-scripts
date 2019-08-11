@@ -1,0 +1,44 @@
+MY_PLANETS = ["X:X:X", "X:X:X", "X:X:X"] //Populate all your planets here
+fs_destinations = ["X:X:X", "X:X:X", "X:X:X"] //Populate FS destination (colonize mission) matching the order of MY_PLANETS
+
+func fleetSaveAll(){
+  
+    for i = 0; i < len(MY_PLANETS); i++ {
+    
+    fs1 = NewFleet()
+    fs1.SetOrigin(fs_origins[i])
+    fs1.SetDestination(fs_destinations[i])
+    fs1.SetMission(COLONIZE)
+    fs1.SetSpeed(SIXTY_PERCENT) //SET SPEED
+    fs1.SetAllShips()
+    fs1.SetAllResources()
+    fs1s, err = fs1.SendNow()
+    print(err)
+
+}
+
+func planet2Moon(){
+    for planet in MY_PLANETS{
+        f = NewFleet()
+        f.SetOrigin(planet)
+        f.SetDestination("M:" + planet)
+        f.SetMission(PARK)
+        f.SetAllShips()
+        f.SetAllResources()
+        
+        f, e = f.SendNow()
+    }
+}
+
+func moon2Planet(){
+        for planet in MY_PLANETS{
+        f = NewFleet()
+        f.SetOrigin("M:" + planet)
+        f.SetDestination(planet)
+        f.SetMission(PARK)
+        f.SetAllShips()
+        f.SetAllResources()
+        
+        f, e = f.SendNow()
+    }
+}
