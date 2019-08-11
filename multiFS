@@ -6,7 +6,7 @@ func fleetSaveAll(){
     for i = 0; i < len(MY_PLANETS); i++ {
     
     fs1 = NewFleet()
-    fs1.SetOrigin("M:" + fs_origins[i])
+    fs1.SetOrigin("M:" + MY_PLANETS[i])
     fs1.SetDestination(fs_destinations[i])
     fs1.SetMission(COLONIZE)
     fs1.SetSpeed(SIXTY_PERCENT) //SET SPEED
