@@ -45,7 +45,7 @@ func sendRecsAndAtk(){
     ships_rec.Set(RECYCLER, rec)
     secs_rec, fuel_rec = FlightTime(ParseCoord(recFrom)[0], ParseCoord(atkTo)[0], HUNDRED_PERCENT, *ships_rec)
     
-    waitTime = secs_rec - secs
+    waitTime = secs_rec - secs - 5
     
     rf = NewFleet()
     rf.SetOrigin(recFrom)
