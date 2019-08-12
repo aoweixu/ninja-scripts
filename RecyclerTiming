@@ -1,0 +1,71 @@
+//locations
+atkFrom = "1:1:1" //Add M: if sending from moon
+recFrom = atkFrom //Change only if recs and attack aren't at the same planet
+
+atkTo = "1:2:1" //Add M: if going to moon
+
+//Rec fleet
+rec = 1
+//Atk fleet
+atkFleet = {
+            SMALLCARGO: 0,
+            LARGECARGO: 0,
+            LIGHTFIGHTER: 0,
+            HEAVYFIGHTER: 0,
+            CRUISER: 0,
+            BATTLESHIP: 0,
+            BATTLECRUISER: 0,
+            BOMBER: 0,
+            DESTROYER: 0,
+            DEATHSTAR: 0
+}
+
+//----------------------------------------------------------------------
+
+func createShipsInfos(fleetMap){
+    ships = NewShipsInfos()
+    for unitID, nbr in fleetMap{
+        if nbr > 0{
+            s = NewShipsInfos()
+            s.Set(unitID, nbr)
+            ships.Add(*s)
+        }
+    }
+    return ships
+}
+
+
+func sendRecsAndAtk(){
+    
+    //find atk fleet speed
+    ships_atk = createShipsInfos(atkFleet)
+    secs, fuel = FlightTime(ParseCoord(atkFrom)[0], ParseCoord(atkTo)[0], HUNDRED_PERCENT, *ships_atk)
+    //find recs fleet speed
+    ships_rec = NewShipsInfos()
+    ships_rec.Set(RECYCLER, rec)
+    secs_rec, fuel_rec = FlightTime(ParseCoord(recFrom)[0], ParseCoord(atkTo)[0], HUNDRED_PERCENT, *ships_rec)
+    
+    waitTime = secs_rec - secs
+    
+    rf = NewFleet()
+    rf.SetOrigin(recFrom)
+    rf.SetDestination(atkTo)
+    rf.SetMission(RECYCLEDEBRISFIELD)
+    rf.SetSpeed(HUNDRED_PERCENT)
+    rf.AddShips(RECYCLER, rec)
+    
+    af = NewFleet()
+    af.SetOrigin(atkFrom)
+    af.SetDestination(atkTo)
+    af.SetMission(ATTACK)
+    af.SetSpeed(HUNDRED_PERCENT)
+    for unitID, nbr in atkFleet{
+        if nbr > 0 {af.AddShips(unitID, nbr)}
+    }
+    
+    rf, err_rf = rf.SendNow()
+    Sleep(waitTime * 1000)
+    af, err_af = af.SendNow()
+}
+
+sendRecsAndAtk()
