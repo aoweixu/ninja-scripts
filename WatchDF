@@ -1,0 +1,14 @@
+dfCoord = NewCoordinate(X, X, X, DEBRIS_TYPE) //Where to watch DF
+checkEvery = 1 //Seconds
+
+initialDf = 1
+
+for initialDf > 0 {
+    Sleep(checkEvery * 1000)
+    sysInfos, _ = GalaxyInfos(dfCoord.Galaxy, dfCoord.System)
+    planetInfo = sysInfos.Position(dfCoord.Position)
+    initialDf = planetInfo.Debris.Crystal
+    print(initialDf)
+}
+ts = Unix(GetTimestamp(), 0)
+SendTelegram(TELEGRAM_CHAT_ID, "DF @" + dfCoord + " Disappeared on " +  ts)
