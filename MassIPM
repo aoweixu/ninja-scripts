@@ -1,0 +1,34 @@
+---------------//-----------------------INPUTS------------------------------------
+sendFrom = "X:X:X"
+target = "X:X:X"
+nukes2Send = 100 //Total number to send
+nukesPerWave = 30 //How many to launch at once
+secPerNuke = 1 //time in second to construct one ipm
+//---------------------------------------------------------------------------------
+target = ParseCoords(target)[0]
+func mass_ipm(sendFrom, target, nukes2Send, nukesPerWave, secPerNuke){
+    //Repeatedly nuke the fuck out of whoever until desired number of nukes reached
+    c = GetCachedCelestial(sendFrom)
+    siloLvl = c.GetFacilities()[0].MissileSilo
+    nukeCapacity = Floor(siloLvl / 2) * 10
+    if nukesPerWave > nukeCapacity {nukesPerWave = nukeCapacity}
+    nukeSent = 0
+    
+    for nukeSent < nukes2Send{
+        currentNukes = c.GetDefense()[0].InterplanetaryMissiles
+        if currentNukes < nukesPerWave{
+            nukes2Build = nukesPerWave - currentNukes
+            Print("Building " + nukes2Build + " nuke(s)")
+            Print("launching in " + (secPerNuke * nukes2Build) + " seconds...")
+            c.Build(INTERPLANETARYMISSILES, nukes2Build)
+            Sleep((secPerNuke * nukes2Build + 1) * 1000)
+            currentNukes = c.GetDefense()[0].InterplanetaryMissiles
+        }
+        SendIPM(c.GetID(), target, currentNukes, 0)
+        Print(currentNukes + " launched @ " + target)
+        nukeSent = nukeSent + currentNukes
+        Print("Nukes sent to date: " + nukeSent)
+    }
+    Print("COMPLETE: Total of " + nukeSent + " nukes launched @ " + target)
+}
+mass_ipm(sendFrom, target, nukes2Send, nukesPerWave, secPerNuke)
