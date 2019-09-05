@@ -1,0 +1,23 @@
+//---------------------------------INPUTS--------------------------------------
+researchQueue = {
+    COMBUSTIONDRIVE: 1,
+    ESPIONAGETECHNOLOGY: 3,
+    IMPULSEDRIVE: 4,
+}
+researchPlanet = "X:X:X"
+//------------------------------------------------------------------------------
+celestial = GetCachedCelestial(researchPlanet)
+
+for researchID, nbr in researchQueue{
+    count = 0
+    for count < nbr{
+        _, _, _, researchCountdown = ConstructionsBeingBuilt(celestial.GetID())
+        for researchCountdown > 0{
+            Sleep((researchCountdown + 1) * 1000)
+            _, _, _, researchCountdown = ConstructionsBeingBuilt(celestial.GetID())
+        }
+        celestial.BuildTechnology(researchID)
+        count = count + 1
+    }
+
+}
