@@ -1,0 +1,25 @@
+//Check activity timer of all celestials of a player given any of their coordinate
+//------------------------------INPUTS--------------------------------
+given_coord = "X:X:X"
+//--------------------------------------------------------------------
+given_coord = ParseCoord(given_coord)[0]
+func GetCoords(g, s, p){
+    sI, _ = GalaxyInfos(g, s)
+    pI, _ = sI.Position(p)
+    id = pI.Player.ID
+    return GetPlayerCoordinates(id)
+}
+
+func CheckActivity(coord){
+    sI, _ = GalaxyInfos(coord.Galaxy, coord.System)
+    pI, _ = sI.Position(coord.Position)
+    if coord.Type == MOON_TYPE{
+        return pI.Moon.Activity
+    }
+    return pI.Activity
+}
+
+for coord in GetCoords(given_coord.Galaxy, given_coord.System, given_coord.Position){
+    Print(coord + "A: " + CheckActivity(coord))
+}
+
