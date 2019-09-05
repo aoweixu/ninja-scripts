@@ -1,0 +1,24 @@
+//------------------------INPUTS-----------------------------------
+buildingQueue = {
+    METALMINE: 1,
+    NANITEFACTORY: 2,
+}
+buildPlanet = "X:X:X"
+
+//------------------------------------------------------------------
+
+celestial = GetCachedCelestial(buildPlanet)
+
+for building, nbr in buildingQueue{
+    count = 0
+    for count < nbr{
+        _, bdCd, _, _ = ConstructionsBeingBuilt(celestial.GetID())
+        for bdCd > 0{
+            Sleep((bdCd + 1) * 1000)
+            _, bdCd, _, _ = ConstructionsBeingBuilt(celestial.GetID())
+        }
+        celestial.BuildBuilding(building)
+        count = count + 1
+    }
+
+}
