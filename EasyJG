@@ -1,0 +1,55 @@
+//-----------------------------------------INPUTS--------------------------------------------
+jumpFrom = "M:X:X:X"
+jumpTo = "M:X:X:X"
+jumpEverything = false  // use "true" is jumping all ships on moon
+jumpWhen = "30 36 21 * * *" // use "false" if jumping right away
+
+//Ignore if jumpEverything is true
+fleet = {
+    LIGHTFIGHTER: 0,
+    HEAVYFIGHTER: 0,
+    CRUISER: 0,
+    BATTLESHIP: 0,
+    BOMBER: 0,
+    DESTROYER: 0,
+    DEATHSTAR: 0,
+    SMALLCARGO: 1,
+    LARGECARGO: 0,
+    COLONYSHIP: 0,
+    RECYCLER: 0,
+    ESPIONAGEPROBE: 0,
+}
+//-----------------------------------------------------------------------------------------------
+
+err = ""
+func jump(){
+    celestial_from = GetCachedCelestial(jumpFrom)
+    celestial_to = GetCachedCelestial(jumpTo)
+    ships = celestial_from.GetShips()[0]
+    if jumpEverything{
+        err = JumpGate(celestial_from.GetID(), celestial_to.GetID(), ships)
+    }else{
+        ships2jump = NewShipsInfos()
+        for id, num in fleet{
+            s = NewShipsInfos()
+            s.Set(id, num)
+            ships2jump.Add(*s)
+        }
+    
+        err = JumpGate(celestial_from.GetID(), celestial_to.GetID(), *ships2jump)
+    }
+}
+
+if jumpWhen{
+    entryId, err = CronExec(jumpWhen, jump)
+    <-OnQuitCh
+}else{
+    jump()
+}
+
+
+if err == nil{
+    Print("Jump successful")
+}else{
+    Print("Jump failed: " + err)
+}
